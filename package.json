@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
+    "start": "PGDATABASE=nc_news node listen.js",
     "seed": "PGDATABASE=nc_news node ./db/seeds/run-seed.js",
     "test": "PGDATABASE=nc_news_test jest",
     "prepare": "husky install"
