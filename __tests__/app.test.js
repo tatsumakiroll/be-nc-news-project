@@ -48,7 +48,7 @@ describe('/api/articles', () => {
                 .then(({ body }) => {
                     const { articles } = body
                     expect(articles.length).toBe(13)
-                    articles.forEach((article)=>{
+                    articles.forEach((article) => {
                         expect(article).toHaveProperty('author')
                         expect(article).toHaveProperty('title')
                         expect(article).toHaveProperty('article_id')
@@ -103,6 +103,20 @@ describe('/api/articles/:article_id', () => {
                     expect(message).toBe('Bad request');
                 });
         });
+    })
+})
+
+describe('/api/articles/:article_id/comments', () => {
+    describe('GET comments using article_id parametric endpoint', () => {
+        test('GET 200: should return with an array of comments applicable to the article_id presented', () => {
+            return request(app)
+                .get('/api/articles/9/comments')
+                .expect(200)
+                .then(({body}) => {
+                    const {comments} = body
+                    expect(comments.length).toBe(2)
+                })
+        })
     })
 })
 
