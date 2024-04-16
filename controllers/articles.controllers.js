@@ -2,7 +2,6 @@ const { selectAllArticles, selectArticleById } = require('../models/articles.mod
 
 exports.getAllArticles = (req, res, next) => {
     return selectAllArticles().then(({rows})=>{
-        console.log(rows)
         res.status(200).send({articles: rows})
     })
 }
