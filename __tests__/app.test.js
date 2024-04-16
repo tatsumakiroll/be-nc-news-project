@@ -39,6 +39,34 @@ describe('/api/topics', () => {
     })
 })
 
+describe('/api/articles', () => {
+    describe('GET articles', () => {
+        test('GET 200: should return an array of all articles as objects with the tested keys, in descending date order, without a body property', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles.length).toBe(13)
+                    articles.forEach((article)=>{
+                        expect(article).toHaveProperty('author')
+                        expect(article).toHaveProperty('title')
+                        expect(article).toHaveProperty('article_id')
+                        expect(article).toHaveProperty('topic')
+                        expect(article).toHaveProperty('created_at')
+                        expect(article).toHaveProperty('votes')
+                        expect(article).toHaveProperty('article_img_url')
+                        expect(article).toHaveProperty('comment_count')
+                        expect(article).not.toHaveProperty('body')
+                    })
+                    expect(articles).toBeSortedBy('created_at', {
+                        descending: true,
+                    })
+                })
+        })
+    })
+})
+
 describe('/api/articles/:article_id', () => {
     describe('GET articles by id', () => {
         test('GET 200: should return an object of the article that corresponds with the id input as parameter', () => {
