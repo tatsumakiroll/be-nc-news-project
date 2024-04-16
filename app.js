@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const { getApi, getAllTopics, getArticleById } = require('./controllers/topics.controllers')
+const { getApi } = require('./controllers/api.controllers')
+const { getAllTopics } = require('./controllers/topics.controllers')
+const { getArticleById } = require('./controllers/articles.controllers')
 
 app.use(express.json());
 
@@ -29,7 +31,6 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
     res.status(500).send({ message: "Internal Server Error" })
 })
-
 
 
 module.exports = app
