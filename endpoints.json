@@ -68,5 +68,10 @@
         "created_at": "2024-04-17T10:25:21.743Z"
       }
     }
+  },
+  
+  "DELETE /api/comments/:comment_id": {
+    "description": "allows the deletion of a comment provided it is given a correct comment_id",
+    "exampleResponse": "this endpoint does not respond with anything upon completion of request"
   }
 }
