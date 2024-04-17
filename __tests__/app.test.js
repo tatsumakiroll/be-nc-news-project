@@ -85,7 +85,7 @@ describe('/api/articles/:article_id', () => {
                     expect(article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700')
                 })
         })
-        test('GET 404: sends a 404 status and error message when given a valid but non-existant id', () => {
+        test('GET 404: sends a 404 status and error message when given a valid but non-existent id', () => {
             return request(app)
                 .get('/api/articles/999')
                 .expect(404)
@@ -136,12 +136,56 @@ describe('/api/articles/:article_id/comments', () => {
                 })
         })
     })
+    describe('POST: Add comments to an article using article_id parametric endpoint', () => {
+        test('POST 201: will post the comment and return with the added comment', () => {
+            const newComment = {
+                username: "rogersop",
+                body: "Hello?! Is this thing on?"
+            }
+            return request(app)
+                .post('/api/articles/6/comments')
+                .send(newComment)
+                .expect(201)
+                .then(({ body }) => {
+                    const { comment } = body
+                    expect(comment.author).toBe("rogersop")
+                    expect(comment.body).toBe("Hello?! Is this thing on?")
+                })
+        })
+        test('POST 400: will fail to post if any fields are empty and return message "Bad Request"', () => {
+            const newComment = {
+                username: "rogersop",
+            }
+            return request(app)
+                .post('/api/articles/6/comments')
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("Bad request")
+                })
+        })
+        test('POST 404: will fail to post if valid article_id is entered but is non-existent', () => {
+            const newComment = {
+                username: "rogersop",
+                body: "Can anyone hear me?"
+            }
+            return request(app)
+                .post('/api/articles/999/comments')
+                .send(newComment)
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("Not found")
+                })
+        })
+    })
 })
 
 
 describe('General Errors', () => {
     describe('GET non-existant endpoint', () => {
-        test('GET 404: should return with an error message saying "not found"', () => {
+        test('GET 404: should return with an error message saying "Not found"', () => {
             return request(app)
                 .get('/api/topix')
                 .expect(404)
