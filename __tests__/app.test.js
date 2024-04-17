@@ -112,7 +112,7 @@ describe('/api/articles/:article_id', () => {
     describe('PATCH update an article by article_id', () => {
         test('PATCH 200: Should respond with 200 and show the updated article', () => {
             const updateToArticle = {
-                inc_votes:2
+                inc_votes: 2
             }
             return request(app)
                 .patch('/api/articles/3')
@@ -241,7 +241,33 @@ describe('/api/articles/:article_id/comments', () => {
         })
     })
 })
-
+describe('/api/comments/:comment_id', () => {
+    describe('DELETE comments by comment_id', () => {
+        test('DELETE 204: Should send a 204 status and delete the comment by the comment_id', () => {
+            return request(app)
+            .delete("/api/comments/4")
+            .expect(204)
+        })
+        test('DELETE 404: Should send a 404 status if given valid comment_id but it is non-existent', () => {
+            return request(app)
+            .delete("/api/comments/666")
+            .expect(404)
+            .then(({body})=>{
+                const {message} = body
+                expect(message).toBe("Not found")
+            })
+        })
+        test('DELETE 400: Should send a 400 status if given an invalid comment_id', () => {
+            return request(app)
+            .delete("/api/comments/sixsixsix")
+            .expect(400)
+            .then(({body})=>{
+                const {message} = body
+                expect(message).toBe("Bad request")
+            })
+        })
+    })
+})
 
 describe('General Errors', () => {
     describe('GET non-existant endpoint', () => {
