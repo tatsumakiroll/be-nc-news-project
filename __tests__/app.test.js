@@ -5,8 +5,10 @@ const request = require('supertest')
 const app = require('../app')
 const endpoints = require('../endpoints.json')
 
+
 beforeAll(() => seed(data));
 afterAll(() => db.end)
+
 
 describe('/api', () => {
     describe('GET api', () => {
@@ -20,6 +22,7 @@ describe('/api', () => {
         })
     })
 })
+
 
 describe('/api/topics', () => {
     describe('GET topics', () => {
@@ -38,6 +41,7 @@ describe('/api/topics', () => {
         })
     })
 })
+
 
 describe('/api/articles', () => {
     describe('GET articles', () => {
@@ -67,8 +71,9 @@ describe('/api/articles', () => {
     })
 })
 
+
 describe('/api/articles/:article_id', () => {
-    describe('GET articles by id', () => {
+    describe('GET articles by article_id', () => {
         test('GET 200: should return an object of the article that corresponds with the id input as parameter', () => {
             return request(app)
                 .get('/api/articles/2')
@@ -104,7 +109,62 @@ describe('/api/articles/:article_id', () => {
                 });
         });
     })
+    describe('PATCH update an article by article_id', () => {
+        test('PATCH 200: Should respond with 200 and show the updated article', () => {
+            const updateToArticle = {
+                inc_votes:2
+            }
+            return request(app)
+                .patch('/api/articles/3')
+                .send(updateToArticle)
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body
+                    expect(article.votes).toBe(2)
+                })
+        })
+        test('PATCH 404: Should respond with a 404 when presented with a patch request for valid article_id that is non-existent', () => {
+            const updateToArticle = {
+                inc_votes: 2
+            }
+            return request(app)
+                .patch('/api/articles/777')
+                .send(updateToArticle)
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Not found')
+                })
+        })
+        test('PATCH 400: Should respond with a 400 "Bad Request" when presented with a patch request and article_id is wrong data type', () => {
+            const updateToArticle = {
+                inc_votes: 2
+            }
+            return request(app)
+                .patch('/api/articles/sevensevenseven')
+                .send(updateToArticle)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
+        })
+        test('PATCH 400: Should respond with a 400 "Bad Request" when presented with a patch request and the update data is the wrong type', () => {
+            const updateToArticle = {
+                inc_votes: "two"
+            }
+            return request(app)
+                .patch('/api/articles/3')
+                .send(updateToArticle)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
+        })
+    })
 })
+
 
 describe('/api/articles/:article_id/comments', () => {
     describe('GET comments using article_id parametric endpoint', () => {

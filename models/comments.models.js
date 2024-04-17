@@ -15,11 +15,11 @@ exports.selectCommentsByArticleId = (article_id) => {
 }
 
 exports.insertCommentsByArticleId = (article_id, newComment) => {
-        return db.query(`
+    return db.query(`
     INSERT INTO comments
     (article_id, author, body)
     VALUES
     ($1, $2, $3)
     RETURNING *
     `, [article_id, newComment.username, newComment.body])
-    }
+}
