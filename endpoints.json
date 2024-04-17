@@ -39,6 +39,20 @@
       ]
     }
   },
+  
+  "GET /api/users":{
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users":  [
+        {
+        "username": "rogersop",
+        "name": "paul",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+      }
+    ]
+    }
+  },
 
   "PATCH /api/articles/:article_id":{
     "description": "allows updates to vote counts based on the input data and returns the article affected by the update, showing the changes to it",

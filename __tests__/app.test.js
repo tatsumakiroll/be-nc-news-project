@@ -241,34 +241,56 @@ describe('/api/articles/:article_id/comments', () => {
         })
     })
 })
+
+
 describe('/api/comments/:comment_id', () => {
     describe('DELETE comments by comment_id', () => {
         test('DELETE 204: Should send a 204 status and delete the comment by the comment_id', () => {
             return request(app)
-            .delete("/api/comments/4")
-            .expect(204)
+                .delete("/api/comments/4")
+                .expect(204)
         })
         test('DELETE 404: Should send a 404 status if given valid comment_id but it is non-existent', () => {
             return request(app)
-            .delete("/api/comments/666")
-            .expect(404)
-            .then(({body})=>{
-                const {message} = body
-                expect(message).toBe("Not found")
-            })
+                .delete("/api/comments/666")
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("Not found")
+                })
         })
         test('DELETE 400: Should send a 400 status if given an invalid comment_id', () => {
             return request(app)
-            .delete("/api/comments/sixsixsix")
-            .expect(400)
-            .then(({body})=>{
-                const {message} = body
-                expect(message).toBe("Bad request")
-            })
+                .delete("/api/comments/sixsixsix")
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("Bad request")
+                })
         })
     })
 })
 
+describe('/api/users', () => {
+    describe('GET all users', () => {
+        test('GET 200: returns with an array of all users presented as objects and a 200 status', () => {
+            const testUser = {
+                username: 'rogersop',
+                name: 'paul',
+                avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+            }
+
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(({ body }) => {
+                    const { users } = body
+                    expect(users.length).toBe(4)
+                    expect(users[2]).toMatchObject(testUser)
+                })
+        })
+    })
+})
 describe('General Errors', () => {
     describe('GET non-existant endpoint', () => {
         test('GET 404: should return with an error message saying "Not found"', () => {
