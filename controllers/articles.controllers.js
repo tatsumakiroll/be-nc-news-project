@@ -1,8 +1,8 @@
 const { selectAllArticles, selectArticleById, updateArticle } = require('../models/articles.models')
 
 exports.getAllArticles = (req, res, next) => {
-    const { topic } = req.query
-    return selectAllArticles(topic)
+    const { topic, sort_by, order_by } = req.query
+    return selectAllArticles(sort_by, order_by, topic)
     .then((rows) => {
         res.status(200).send({ articles: rows })
     })

@@ -69,7 +69,7 @@ describe('/api/articles', () => {
                 })
         })
     })
-    describe('GET 404 query', () => {
+    describe('GET query', () => {
         test('GET 200: should be able to accept a query for topics, if no query it should default to all', () => {
             return request(app)
                 .get('/api/articles?topic=cats')
@@ -88,6 +88,50 @@ describe('/api/articles', () => {
                     const { message } = body
                     expect(message).toBe('Not found')
                 })
+        })
+    })
+    describe('GET sorting queries', ()=>{
+        test('GET 200: should be able to sort articles by query and in default order descending', ()=>{
+            return request(app)
+                .get('/api/articles?sort_by=author')
+                .expect(200)
+                .then(({body})=>{
+                    const {articles}=body
+                    expect(articles).toBeSortedBy('author',{
+                        descending: true,
+                    })
+                })
+        })
+        test('GET 200: should be able to order a query and in ascending order', ()=>{
+            return request(app)
+                .get('/api/articles?order_by=asc')
+                .expect(200)
+                .then(({body})=>{
+                    const {articles}=body
+                    expect(articles).toBeSortedBy('created_at',{
+                        ascending: true,
+                    })
+                })
+        })
+        test('GET 400: should return with an error message for "Bad request" when given a query for a column that doesnt exist', ()=>{
+            return request(app)
+            .get('/api/articles?sort_by=most_popular')
+            .expect(400)
+            .then(({body})=>{
+                const {message} = body
+                expect(message).toBe('Bad request')
+            })
+
+        })
+        test('GET 400: should return with an error message for "Bad request" when given an order_by that is invalid', ()=>{
+            return request(app)
+            .get('/api/articles?order_by=highest')
+            .expect(400)
+            .then(({body})=>{
+                const {message} = body
+                expect(message).toBe('Bad request')
+            })
+
         })
     })
 })

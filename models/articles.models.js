@@ -1,17 +1,28 @@
 const db = require('../db/connection')
 
-exports.selectAllArticles = (topic) => {
+exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic) => {
+    const validSortBys = ['author', 'title', 'topic', 'votes','created_at']
+    const validOrderBys = ['asc', 'desc']
     const queryValues = []
+
     let sqlQueryString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, 
     COUNT(comments.article_id)::INT AS comment_count
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id `
+
+    if(!validSortBys.includes(sort_by) || !validOrderBys.includes(order_by)){
+        return Promise.reject({status: 400, message: 'Bad request'})
+    }
+
     if(topic){
         queryValues.push(topic)
         sqlQueryString += `WHERE topic=$1 `
     }
-    sqlQueryString += `GROUP BY articles.article_id
-    ORDER BY created_at DESC;`
+
+    sqlQueryString += `GROUP BY articles.article_id `
+    sqlQueryString += `ORDER BY ${sort_by} `
+    sqlQueryString += `${order_by}`.toUpperCase()
+    
     return db.query(sqlQueryString, queryValues)
     .then(({rows})=>{
         if (rows.length === 0) {
