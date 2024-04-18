@@ -2,10 +2,8 @@ const { selectAllArticles, selectArticleById, updateArticle } = require('../mode
 
 exports.getAllArticles = (req, res, next) => {
     const { topic } = req.query
-    console.log(topic)
     return selectAllArticles(topic)
     .then((rows) => {
-        console.log(rows)
         res.status(200).send({ articles: rows })
     })
     .catch((err)=>{
