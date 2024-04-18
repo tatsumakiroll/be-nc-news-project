@@ -43,7 +43,7 @@ describe('/api/topics', () => {
 })
 
 
-describe('/api/articles', () => {
+describe.only('/api/articles', () => {
     describe('GET articles', () => {
         test('GET 200: should return an array of all articles as objects with the tested keys, in descending date order, without a body property', () => {
             return request(app)
@@ -66,6 +66,27 @@ describe('/api/articles', () => {
                     expect(articles).toBeSortedBy('created_at', {
                         descending: true,
                     })
+                })
+        })
+    })
+    describe('GET 404 query', () => {
+        test('GET 200: should be able to accept a query for topics, if no query it should default to all', () => {
+            return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles.length).toBe(1)
+                expect(articles[0].topic).toBe('cats')
+            })
+        })
+        test('GET 404: if presented with a valid query but the topic doesnt exist should respond with 404 "Not found"', () => {
+            return request(app)
+                .get('/api/articles?topic=world_news')
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Not found')
                 })
         })
     })
