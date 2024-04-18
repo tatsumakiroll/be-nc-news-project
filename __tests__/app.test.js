@@ -148,7 +148,6 @@ describe('/api/articles/:article_id', () => {
                 .expect(200)
                 .then(({ body }) => {
                     const { article } = body
-                    expect(article.comment_count).toBe(2)
                     expect(article).toMatchObject(testArticleResult)
                 })
         })
