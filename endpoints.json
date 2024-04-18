@@ -22,7 +22,7 @@
       "author",
       "topic",
       "sort_by",
-      "order"
+      "order_by"
     ],
     "exampleResponse": {
       "articles": [
