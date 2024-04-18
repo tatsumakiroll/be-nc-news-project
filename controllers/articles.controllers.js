@@ -1,8 +1,13 @@
 const { selectAllArticles, selectArticleById, updateArticle } = require('../models/articles.models')
 
 exports.getAllArticles = (req, res, next) => {
-    return selectAllArticles().then(({ rows }) => {
+    const { topic } = req.query
+    return selectAllArticles(topic)
+    .then((rows) => {
         res.status(200).send({ articles: rows })
+    })
+    .catch((err)=>{
+        next(err)
     })
 }
 
@@ -20,10 +25,10 @@ exports.patchArticleById = (req, res, next) => {
     const { article_id } = req.params
     const updateToArticle = req.body
     return updateArticle(updateToArticle, article_id)
-    .then((updatedArticle)=>{
-        res.status(200).send({article:updatedArticle})
-    })
-    .catch((err)=>{
-        next(err)
-    })
+        .then((updatedArticle) => {
+            res.status(200).send({ article: updatedArticle })
+        })
+        .catch((err) => {
+            next(err)
+        })
 }
