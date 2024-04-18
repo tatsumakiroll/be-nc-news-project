@@ -43,7 +43,7 @@ describe('/api/topics', () => {
 })
 
 
-describe.only('/api/articles', () => {
+describe('/api/articles', () => {
     describe('GET articles', () => {
         test('GET 200: should return an array of all articles as objects with the tested keys, in descending date order, without a body property', () => {
             return request(app)
@@ -72,13 +72,13 @@ describe.only('/api/articles', () => {
     describe('GET 404 query', () => {
         test('GET 200: should be able to accept a query for topics, if no query it should default to all', () => {
             return request(app)
-            .get('/api/articles?topic=cats')
-            .expect(200)
-            .then(({ body }) => {
-                const { articles } = body
-                expect(articles.length).toBe(1)
-                expect(articles[0].topic).toBe('cats')
-            })
+                .get('/api/articles?topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles.length).toBe(1)
+                    expect(articles[0].topic).toBe('cats')
+                })
         })
         test('GET 404: if presented with a valid query but the topic doesnt exist should respond with 404 "Not found"', () => {
             return request(app)
@@ -120,7 +120,7 @@ describe('/api/articles/:article_id', () => {
                     expect(message).toBe('Not found')
                 })
         })
-        test('GET:400 sends a 400 status and error message when given an invalid id', () => {
+        test('GET 400 sends a 400 status and error message when given an invalid id', () => {
             return request(app)
                 .get('/api/articles/not_an_id_number')
                 .expect(400)
@@ -129,6 +129,29 @@ describe('/api/articles/:article_id', () => {
                     expect(message).toBe('Bad request');
                 });
         });
+    })
+    describe('GET article by id should now include comment_count property', () => {
+        test('When given an article_id, returned object includes a comment_count property', () => {
+            const testArticleResult = {
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: '2020-11-03T09:12:00.000Z',
+                votes: 0,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: 2
+            }
+            return request(app)
+                .get('/api/articles/3')
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body
+                    expect(article.comment_count).toBe(2)
+                    expect(article).toMatchObject(testArticleResult)
+                })
+        })
     })
     describe('PATCH update an article by article_id', () => {
         test('PATCH 200: Should respond with 200 and show the updated article', () => {
