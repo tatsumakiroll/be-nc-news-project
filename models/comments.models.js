@@ -22,6 +22,9 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
     ($1, $2, $3)
     RETURNING *
     `, [article_id, newComment.username, newComment.body])
+    .then(({rows})=>{
+        return rows[0]
+    })
 }
 
 exports.deleteCommentById = (comment_id) => {

@@ -3,8 +3,8 @@ const { selectAllArticles, selectArticleById, updateArticle } = require('../mode
 exports.getAllArticles = (req, res, next) => {
     const { topic, sort_by, order_by } = req.query
     return selectAllArticles(sort_by, order_by, topic)
-    .then((rows) => {
-        res.status(200).send({ articles: rows })
+    .then((articles) => {
+        res.status(200).send({ articles: articles })
     })
     .catch((err)=>{
         next(err)

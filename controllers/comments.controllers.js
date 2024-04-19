@@ -3,8 +3,8 @@ const { selectCommentByArticleId, insertCommentByArticleId, deleteCommentById } 
 exports.getCommentByArticleId = (req, res, next) => {
     const { article_id } = req.params
     return selectCommentByArticleId(article_id)
-        .then((rows) => {
-            res.status(200).send({ comments: rows })
+        .then((comments) => {
+            res.status(200).send({ comments: comments })
         })
         .catch((err) => {
             next(err)
@@ -15,8 +15,8 @@ exports.postCommentByArticleId = (req, res, next) => {
     const { article_id } = req.params
     const newComment = req.body
     return insertCommentByArticleId(article_id, newComment)
-        .then(({ rows }) => {
-            res.status(201).send({ comment: rows[0] })
+        .then((comment) => {
+            res.status(201).send({ comment: comment })
         })
         .catch((err) => {
             next(err)
