@@ -9,7 +9,7 @@ exports.selectAllUsers = () => {
         })
 }
 
-exports.selectUserByName = (username) => {
+exports.selectUserByUsername = (username) => {
     return db.query(`
     SELECT * 
     FROM users
