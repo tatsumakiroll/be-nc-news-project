@@ -331,6 +331,67 @@ describe('/api/articles/:article_id/comments', () => {
 
 
 describe('/api/comments/:comment_id', () => {
+    describe('PATCH updates comments votes by comment_id', () => {
+        test('PATCH 200: Should respond with a 200 status and the updated comment with new vote value', () => {
+            const updateToComment = {
+                inc_votes: 10
+            }
+            const patchedComment = {
+                body: " I carry a log — yes. Is it funny to you? It is not to me.",
+                votes: -90,
+                author: "icellusedkars",
+                article_id: 1,
+                created_at: "2020-02-23T12:01:00.000Z",
+            }
+            return request(app)
+                .patch("/api/comments/4")
+                .send(updateToComment)
+                .expect(200)
+                .then(({ body }) => {
+                    const { comment } = body
+                    expect(comment).toMatchObject(patchedComment)
+                })
+        })
+        test('PATCH 404: Should respond with a 404 when presented with a patch request for valid comment_id that is non-existent', () => {
+            const updateToComment = {
+                inc_votes: 2
+            }
+            return request(app)
+                .patch('/api/comments/777')
+                .send(updateToComment)
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Not found')
+                })
+        })
+        test('PATCH 400: Should respond with a 400 "Bad Request" when presented with a patch request and comment_id is wrong data type', () => {
+            const updateToComment = {
+                inc_votes: 2
+            }
+            return request(app)
+                .patch('/api/comments/ninezeroninezero')
+                .send(updateToComment)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
+        })
+        test('PATCH 400: Should respond with a 400 "Bad Request" when presented with a patch request and the update data is the wrong type', () => {
+            const updateToComment = {
+                inc_votes: "two"
+            }
+            return request(app)
+                .patch('/api/comments/3')
+                .send(updateToComment)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
+        })
+    })
     describe('DELETE comments by comment_id', () => {
         test('DELETE 204: Should send a 204 status and delete the comment by the comment_id', () => {
             return request(app)
@@ -339,7 +400,7 @@ describe('/api/comments/:comment_id', () => {
         })
         test('DELETE 404: Should send a 404 status if given valid comment_id but it is non-existent', () => {
             return request(app)
-                .delete("/api/comments/666")
+                .delete("/api/comments/9090")
                 .expect(404)
                 .then(({ body }) => {
                     const { message } = body
@@ -357,6 +418,7 @@ describe('/api/comments/:comment_id', () => {
         })
     })
 })
+
 
 describe('/api/users', () => {
     describe('GET all users', () => {
