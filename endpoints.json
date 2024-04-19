@@ -53,6 +53,16 @@
     ]
     }
   },
+  "GET /api/users/:username": {
+    "description": "serves up an object with the username matched to the query",
+    "exampleResponse":{
+      "user":   {
+        "username": "travis",
+        "name": "arnold",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+      }
+    }
+  },
   "GET /api/articles/:article_id":{
     "description": "serves up the relevant article by the article_id as an object, *now including comment count for this article*",
     "exampleResponse":{
