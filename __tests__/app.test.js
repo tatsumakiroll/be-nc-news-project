@@ -90,47 +90,47 @@ describe('/api/articles', () => {
                 })
         })
     })
-    describe('GET sorting queries', ()=>{
-        test('GET 200: should be able to sort articles by query and in default order descending', ()=>{
+    describe('GET sorting queries', () => {
+        test('GET 200: should be able to sort articles by query and in default order descending', () => {
             return request(app)
                 .get('/api/articles?sort_by=author')
                 .expect(200)
-                .then(({body})=>{
-                    const {articles}=body
-                    expect(articles).toBeSortedBy('author',{
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles).toBeSortedBy('author', {
                         descending: true,
                     })
                 })
         })
-        test('GET 200: should be able to order a query and in ascending order', ()=>{
+        test('GET 200: should be able to order a query and in ascending order', () => {
             return request(app)
                 .get('/api/articles?order_by=asc')
                 .expect(200)
-                .then(({body})=>{
-                    const {articles}=body
-                    expect(articles).toBeSortedBy('created_at',{
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles).toBeSortedBy('created_at', {
                         ascending: true,
                     })
                 })
         })
-        test('GET 400: should return with an error message for "Bad request" when given a query for a column that doesnt exist', ()=>{
+        test('GET 400: should return with an error message for "Bad request" when given a query for a column that doesnt exist', () => {
             return request(app)
-            .get('/api/articles?sort_by=most_popular')
-            .expect(400)
-            .then(({body})=>{
-                const {message} = body
-                expect(message).toBe('Bad request')
-            })
+                .get('/api/articles?sort_by=most_popular')
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
 
         })
-        test('GET 400: should return with an error message for "Bad request" when given an order_by that is invalid', ()=>{
+        test('GET 400: should return with an error message for "Bad request" when given an order_by that is invalid', () => {
             return request(app)
-            .get('/api/articles?order_by=highest')
-            .expect(400)
-            .then(({body})=>{
-                const {message} = body
-                expect(message).toBe('Bad request')
-            })
+                .get('/api/articles?order_by=highest')
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
 
         })
     })
@@ -377,7 +377,36 @@ describe('/api/users', () => {
                 })
         })
     })
+    describe('GET user by username', () => {
+        test('GET 200: selects user by username, presents it as an object and gives 200 status', () => {
+            const testUser = {
+                username: 'lurker',
+                name: 'do_nothing',
+                avatar_url:
+                    'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+            }
+            return request(app)
+                .get('/api/users/lurker')
+                .expect(200)
+                .then(({ body }) => {
+                    const { user } = body
+                    expect(user).toMatchObject(testUser)
+                })
+        })
+        test('GET 404: returns with message "Not found" if presented with a valid username but is non-existent', () => {
+            return request(app)
+                .get('/api/users/travis')
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Not found')
+                })
+        })
+    })
 })
+
+
+
 describe('General Errors', () => {
     describe('GET non-existant endpoint', () => {
         test('GET 404: should return with an error message saying "Not found"', () => {

@@ -1,5 +1,5 @@
-const topicsRouter = require ('express').Router();
-const {getAllTopics} = require ('../controllers/topics.controllers')
+const { getAllTopics } = require('../controllers/topics.controllers')
+const topicsRouter = require('express').Router();
 
 topicsRouter
     .route('/')
