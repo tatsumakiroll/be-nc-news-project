@@ -468,7 +468,6 @@ describe('/api/users', () => {
 })
 
 
-
 describe('General Errors', () => {
     describe('GET non-existant endpoint', () => {
         test('GET 404: should return with an error message saying "Not found"', () => {
