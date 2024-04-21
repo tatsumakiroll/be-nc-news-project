@@ -1,6 +1,6 @@
 const db = require('../db/connection')
 
-exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic) => {
+exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic, limit = 10, p = 0) => {
     const validSortBys = ['author', 'title', 'topic', 'votes', 'created_at']
     const validOrderBys = ['asc', 'desc']
     const queryValues = []
@@ -21,7 +21,8 @@ exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic) =
 
     sqlQueryString += `GROUP BY articles.article_id `
     sqlQueryString += `ORDER BY ${sort_by} `
-    sqlQueryString += `${order_by}`.toUpperCase()
+    sqlQueryString += `${order_by} `.toUpperCase()
+    sqlQueryString += `LIMIT ${limit} OFFSET ${p}`
 
     return db.query(sqlQueryString, queryValues)
         .then(({ rows }) => {

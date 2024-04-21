@@ -51,7 +51,7 @@ describe('/api/articles', () => {
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body
-                    expect(articles.length).toBe(13)
+                    expect(articles.length).toBe(10)
                     articles.forEach((article) => {
                         expect(article).toHaveProperty('author')
                         expect(article).toHaveProperty('title')
@@ -132,6 +132,38 @@ describe('/api/articles', () => {
                     expect(message).toBe('Bad request')
                 })
 
+        })
+    })
+    describe('GET pagination', () => {
+        test('GET 200: should limit the amount of entries that are recieved when querying', () => {
+            return request(app)
+                .get('/api/articles?limit=7')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles.length).toBe(7)
+                })
+        })
+        test('GET 200: should return the expected article when giving a query limit and page number', () => {
+            const expectedResult =   {
+                article_id: 6,
+                title: 'A',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                created_at: '2020-10-18T01:00:00.000Z',
+                votes: 0,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: 1
+              }
+          
+            return request(app)
+                .get('/api/articles?limit=1&p=1')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body
+                    expect(articles.length).toBe(1)
+                    expect(articles[0]).toMatchObject(expectedResult)
+                })
         })
     })
     describe('POST articles should be able to post a new article', () => {
