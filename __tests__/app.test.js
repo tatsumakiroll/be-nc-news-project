@@ -134,6 +134,53 @@ describe('/api/articles', () => {
 
         })
     })
+    describe('POST articles should be able to post a new article', () => {
+        test('POST 200: gives a 200 status and returns an object with the posted article', () => {
+            const testToPost = {
+                author: "rogersop",
+                title: "my life of grime",
+                body: "So it all began on a warm summer evening in 1987 Toronto",
+                topic: "cats",
+                article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+            }
+            return request(app)
+                .post('/api/articles')
+                .send(testToPost)
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body
+                    expect(article).toEqual(
+                        expect.objectContaining({
+                            article_id: 14,
+                            title: 'my life of grime',
+                            topic: 'cats',
+                            author: 'rogersop',
+                            body: 'So it all began on a warm summer evening in 1987 Toronto',
+                            created_at: expect.any(String),
+                            votes: 0,
+                            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                            comment_count: 0
+                        })
+                    )
+                })
+        })
+        test('POST 400: should give a error saying "Bad request" if a property has an empty field', () => {
+            const testToPost = {
+                author: "rogersop",
+                title: "my life of grime",
+                topic: "cats",
+                article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+            }
+            return request(app)
+                .post('/api/articles')
+                .send(testToPost)
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe('Bad request')
+                })
+        })
+    })
 })
 
 
