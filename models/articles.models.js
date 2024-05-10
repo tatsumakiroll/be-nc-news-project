@@ -1,7 +1,7 @@
 const db = require('../db/connection')
 
 exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic, limit = 10, p = 0) => {
-    const validSortBys = ['author', 'title', 'topic', 'votes', 'created_at']
+    const validSortBys = ['author', 'title', 'topic', 'votes', 'created_at', 'comment_count']
     const validOrderBys = ['asc', 'desc']
     const queryValues = []
 
