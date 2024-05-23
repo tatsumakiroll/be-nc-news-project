@@ -26,6 +26,7 @@ exports.selectAllArticles = (sort_by = 'created_at', order_by = "desc", topic, l
 
     return db.query(sqlQueryString, queryValues)
         .then(({ rows }) => {
+            console.log(rows)
             if (rows.length === 0) {
                 return Promise.reject({
                     status: 404, message: 'Not found'

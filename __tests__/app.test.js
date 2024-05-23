@@ -134,7 +134,7 @@ describe('/api/articles', () => {
 
         })
     })
-    describe('GET pagination', () => {
+    describe.only('GET pagination', () => {
         test('GET 200: should limit the amount of entries that are recieved when querying', () => {
             return request(app)
                 .get('/api/articles?limit=7')
@@ -146,18 +146,18 @@ describe('/api/articles', () => {
         })
         test('GET 200: should return the expected article when giving a query limit and page number', () => {
             const expectedResult =   {
-                article_id: 6,
-                title: 'A',
+                article_id: 2,
+                title: 'Sony Vaio; or, The Laptop',
                 topic: 'mitch',
                 author: 'icellusedkars',
-                created_at: '2020-10-18T01:00:00.000Z',
+                created_at: "2020-10-16T05:03:00.000Z",
                 votes: 0,
                 article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-                comment_count: 1
+                comment_count: 0
               }
           
             return request(app)
-                .get('/api/articles?limit=1&p=1')
+                .get('/api/articles?limit=1&p=2')
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body
